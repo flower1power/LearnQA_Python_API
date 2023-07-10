@@ -1,9 +1,16 @@
+import allure
 import requests
 from lib.my_requests import MyRequests
 from lib.base_case import BaseCase
 from lib.assertions import Assertions
 
+@allure.epic("User Edit")
 class TestUserEdit(BaseCase):
+    @allure.story("Edit Just Created User")
+    @allure.severity(allure.severity_level.NORMAL)
+    @allure.tag("user_edit")
+    @allure.title("Test Editing Just Created User")
+    @allure.description("This test verifies that a just created user can be edited successfully")
     def test_edit_just_created_user(self):
         # REGISTER
         register_data = self.prepare_registration_data()
@@ -73,6 +80,11 @@ class TestUserEdit(BaseCase):
             "Wrong name of the user after edit"
         )
 
+    @allure.story("Edit User While Unauthorized")
+    @allure.severity(allure.severity_level.CRITICAL)
+    @allure.tag("user_edit")
+    @allure.title("Test Editing User While Unauthorized")
+    @allure.description("This test verifies that editing a user while unauthorized returns an error message")
     def test_edit_user_unauthorized(self):
         # EDIT
         response = MyRequests.put(
@@ -83,7 +95,12 @@ class TestUserEdit(BaseCase):
         Assertions.asert_code_status(response, 400)
         assert response.content.decode("utf-8") == "Auth token not supplied"
 
-
+    @allure.story("Edit User While Authorized as Another User")
+    @allure.severity(allure.severity_level.MINOR)
+    @allure.tag("user_edit")
+    @allure.title("Test Editing User While Authorized as Another User")
+    @allure.description(
+        "This test verifies that editing a user while authorized as another user returns an error message")
     def test_edit_user_authorized_as_another_user(self):
         # REGISTER user1
         register_data = self.prepare_registration_data()
@@ -115,6 +132,11 @@ class TestUserEdit(BaseCase):
         Assertions.asert_code_status(response4, 400)
         assert response4.content.decode("utf-8") == "Error updating user"
 
+    @allure.story("Edit User with Invalid Email")
+    @allure.severity(allure.severity_level.NORMAL)
+    @allure.tag("user_edit")
+    @allure.title("Test Editing User with Invalid Email")
+    @allure.description("This test verifies that editing a user with an invalid email returns an error message")
     def test_edit_user_invalid_email(self):
         # REGISTER
         register_data = self.prepare_registration_data()
@@ -141,6 +163,11 @@ class TestUserEdit(BaseCase):
         Assertions.asert_code_status(response3, 400)
         assert response3.content.decode("utf-8") == "Invalid email format"
 
+    @allure.story("Edit User with Short firstName")
+    @allure.severity(allure.severity_level.NORMAL)
+    @allure.tag("user_edit")
+    @allure.title("Test Editing User with Short firstName")
+    @allure.description("This test verifies that editing a user with a short firstName returns an error message")
     def test_edit_user_short_firstName(self):
         # REGISTER
         register_data = self.prepare_registration_data()
@@ -166,9 +193,3 @@ class TestUserEdit(BaseCase):
 
         Assertions.asert_code_status(response3, 400)
         assert response3.content.decode("utf-8") == '{"error":"Too short value for field firstName"}'
-
-
-
-
-
-

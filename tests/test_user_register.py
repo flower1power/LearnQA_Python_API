@@ -1,3 +1,4 @@
+import allure
 import pytest
 import requests
 from parameterized import parameterized
@@ -7,6 +8,8 @@ from lib.base_case import BaseCase
 from lib.assertions import Assertions
 # from datetime import datetime
 
+
+@allure.epic("User Registration")
 class TestUserRegister(BaseCase):
     # def setup(self):
     #     base_part = "learnqa"
@@ -16,6 +19,8 @@ class TestUserRegister(BaseCase):
 
 
 
+    @allure.title("Test creating a user successfully")
+    @allure.description("This test verifies that a user can be created successfully")
     def test_craete_user_successfully(self):
 
         data = self.prepare_registration_data()
@@ -36,6 +41,10 @@ class TestUserRegister(BaseCase):
         Assertions.asert_code_status(response, expected_status_code=200)
         Assertions.assert_json_has_key(response, "id")
 
+
+
+    @allure.title("Test creating a user with an existing email")
+    @allure.description("This test verifies that creating a user with an existing email returns an error message")
     def test_create_user_with_existing_email(self):
         email = 'vinkotov@example.com'
         data = self.prepare_registration_data(email)
@@ -56,6 +65,10 @@ class TestUserRegister(BaseCase):
         Assertions.asert_code_status(response, expected_status_code=400)
         assert response.content.decode("utf-8") == f"Users with email '{email}' already exists", f"Unexpected content {response.content}"
 
+
+
+    @allure.title("Test creating a user with an invalid email")
+    @allure.description("This test verifies that creating a user with an invalid email returns an error message")
     def test_create_user_with_invalid_email(self):
         email = 'invalid_email'
         data = self.prepare_registration_data(email)
@@ -66,6 +79,9 @@ class TestUserRegister(BaseCase):
         assert response.content.decode("utf-8") == "Invalid email format"
 
 
+
+    @allure.title("Test creating a user without a required field")
+    @allure.description("This test verifies that creating a user without a required field returns an error message")
     @pytest.mark.parametrize("field, data", [
         ("password",
          {"username": "learnqa", "firstName": "learnqa", "lastName": "learnqa", "email": "test@example.com"}),
@@ -82,6 +98,8 @@ class TestUserRegister(BaseCase):
 
 
 
+    @allure.title("Test creating a user with a short name")
+    @allure.description("This test verifies that creating a user with a short name returns an error message")
     def test_create_user_with_short_name(self):
         name = 'a'
         data = {
@@ -98,6 +116,9 @@ class TestUserRegister(BaseCase):
         Assertions.asert_code_status(response, expected_status_code=400)
         assert response.content.decode("utf-8") == "The value of 'username' field is too short"
 
+
+    @allure.title("Test creating a user with a long name")
+    @allure.description("This test verifies that creating a user with a long name returns an error message")
     def test_create_user_with_long_name(self):
         name = 'a'*251
         data = {

@@ -58,6 +58,8 @@ class TestUserAuth(BaseCase):
 
     @allure.description("This test checks authorizations status w/o sending auth cookie or token")
     @pytest.mark.parametrize("condition", exclude_params)
+    @allure.issue("YOUR_ISSUE_TRACKER_LINK")
+    @allure.tag("negative_case")
     def test_nagative_auth_check(self, condition):
 
         # if condition == "no_cookie":
